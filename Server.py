@@ -2,16 +2,29 @@ from flask import Flask, jsonify, request
 from flask_cors import CORS, cross_origin
 import socket
 import sqlite3
+import bcrypt
 
 app = Flask(__name__)
 CORS(app)
 CORS(app, resources={r"/*": {"origins": "http://localhost:3000"}})
 
+def hash_password(password):
+    salt = bcrypt.gensalt()
+    hash_password = bcrypt.hashpw(password.encode('utf-8'), salt)
+    return hash_password.decode('utf-8')
+
+def check_password(password, hashed_password):
+    if isinstance(hashed_password, str):
+        hashed_password = hashed_password.encode('utf-8')
+    return bcrypt.checkpw(password.encode('utf-8'), hashed_password)
+
 def save_data_to_db(name, email, password):
     db = sqlite3.connect('fepo.db')
     sql = db.cursor()
 
-    sql.execute("INSERT INTO users (name, email, password) VALUES (?, ?, ?)", (name, email, password))
+    hashed_password = hash_password(password)
+
+    sql.execute("INSERT INTO users (name, email, password) VALUES (?, ?, ?)", (name, email, hashed_password))
 
     db.commit()
     db.close()
@@ -48,10 +61,10 @@ def login_user():
 
     with sqlite3.connect('fepo.db') as db:
         sql = db.cursor()
-        sql.execute("SELECT * FROM users WHERE email = ? AND password = ?", (email, password))
+        sql.execute("SELECT password FROM users WHERE email = ?", (email,))
         user = sql.fetchone()
 
-        if user:
+        if user and check_password(password, user[0]):
             return jsonify({'status': True})
         else:
             return jsonify({'status': False})
