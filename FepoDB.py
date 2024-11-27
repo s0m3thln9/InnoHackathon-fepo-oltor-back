@@ -58,3 +58,4 @@ if __name__ == '__main__':
     # Creating a DB
     create_bd()
     print("Таблица users успешно создана.")
+

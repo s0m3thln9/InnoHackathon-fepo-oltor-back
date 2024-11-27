@@ -1,4 +1,3 @@
-import base64
 from flask import Flask, jsonify, request     # Фреймворк для создания веь-приложений и API
 from flask_cors import CORS, cross_origin     # Решает проблему ограничения доступа к серверу из других доменов
 import socket     # Библиотека используется для работы с сетевыми адресами и хостами
@@ -215,14 +214,12 @@ def get_places():
                     'lat': lat,
                     'lng': lng
                 },
-                'title':{
-                    'name': name,
-                    'rating': rating,
-                    'period': period,
-                    'description': description,
-                    'image': None
+                'name': name,
+                'rating': rating,
+                'period': period,
+                'description': description,
+                'image': None
                 }
-            }
             if image_blob:
                 place_data['title']['image'] = image_blob.decode('utf-8')
 

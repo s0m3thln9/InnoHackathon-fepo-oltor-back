@@ -34,3 +34,5 @@ while True:
         print("Пока")
         break
 
+
+
