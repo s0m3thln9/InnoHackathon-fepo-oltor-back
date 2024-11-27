@@ -220,13 +220,9 @@ def get_places():
                 'description': description,
                 'image': None
                 }
-            if image_blob:
-                place_data['title']['image'] = image_blob.decode('utf-8')
-
-            places_list.append(place_data)
         db.close()
 
-        return jsonify({'places': places_list})
+        return jsonify({'places': place_data})
     except Exception as e:
         return jsonify({'status': False, 'message': str(e)})
 
