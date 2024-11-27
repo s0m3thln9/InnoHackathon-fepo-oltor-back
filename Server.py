@@ -220,9 +220,10 @@ def get_places():
                 'description': description,
                 'image': None
                 }
+            places_list.append(place_data)
         db.close()
 
-        return jsonify({'places': place_data})
+        return jsonify({'places': places_list})
     except Exception as e:
         return jsonify({'status': False, 'message': str(e)})
 
