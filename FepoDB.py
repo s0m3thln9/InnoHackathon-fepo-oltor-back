@@ -13,6 +13,18 @@ def create_bd():
     )
     """)
 
+    sql.execute("""
+    CREATE TABLE IF NOT EXISTS placess (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    name TEXT NOT NULL,
+    rating INTEGER NOT NULL,
+    period TEXT NOT NULL,
+    image BLOB,
+    description TEXT NOT NULL,
+    lat REAL NOT NULL,
+    lng REAL NOT NULL
+    )""")
+
     db.commit()
     db.close()
 
