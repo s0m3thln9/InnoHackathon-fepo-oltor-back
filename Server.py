@@ -1,3 +1,5 @@
+import base64
+
 from flask import Flask, jsonify, request     # Фреймворк для создания веь-приложений и API
 from flask_cors import CORS, cross_origin     # Решает проблему ограничения доступа к серверу из других доменов
 import socket     # Библиотека используется для работы с сетевыми адресами и хостами
@@ -56,38 +58,13 @@ def check_password(password, hashed_password):
         hashed_password = hashed_password.encode('utf-8')
     return bcrypt.checkpw(password.encode('utf-8'), hashed_password)
 
-
-# Функция для сохранения данных в БД
-# Function for saving data to the database
 def save_data_to_db(name, email, password):
-    """
-        Сохраняет данные пользователя (имя, email и хеш пароля) в БД SQLite
-        Stores user data (name, email and password hash) in a SQLite database
-
-        :param name: Имя пользователя
-        Username
-
-        :param email: Email пользователя
-        User email
-
-        :param password: Пароль пользователя
-        User password
-
-        :return: Пользователь в БД
-        User in DB
-        """
-    # Подключение к БД
-    # Connecting to the DB
     try:
         db = sqlite3.connect('fepo.db')
         sql = db.cursor()
 
-        # Хеширование пароля
-        # Password Hashing
         hashed_password = hash_password(password)
 
-        # Добавление данных пользователя в таблицу users
-        # Adding user data to the users table
         sql.execute("INSERT INTO users (name, email, password) VALUES (?, ?, ?)", (name, email, hashed_password))
 
         db.commit()
@@ -96,37 +73,14 @@ def save_data_to_db(name, email, password):
     finally:
         db.close()
 
-
-# Маршрут для регистрации пользователя
-# Route for user registration
 @app.route('/registration', methods=['POST'])
 @cross_origin()
 def registration_user():
-    """
-    Обрабатывает запрос на регистрацию пользователя
-    Processes a user registration request
-
-    Ожидается JSON с полями:
-    - name: Имя пользователя
-    - email: Emaol пользователя
-    - password: Пароль пользователя
-    Expected JSON with fields:
-    - name: Username
-    - email: User's email
-    - password: User's password
-
-    :return: Сообщение о результации регистрации
-    Registration result message
-    """
-    # Получение данных из тела запроса
-    # Getting data from the request body
     data = request.json
     name = data.get('name')
     email = data.get('email')
     password = data.get('password')
 
-    # Проверка на наличие полей
-    # Check for presence of fields
     if not name or not email or not password:
         return jsonify({'message': 'Отсутствует имя, адрес электронной почты или пароль'})
 
@@ -138,34 +92,13 @@ def registration_user():
     except Exception as e:
         return jsonify({'status': False, 'message': f'Error during registration: {e}'})
 
-
-# Маршрут для входа пользователя
-# User login route
 @app.route('/login', methods=['POST'])
 @cross_origin()
 def login_user():
-    """
-    Обрабатывает запрос на вход пользователя
-    Processes a user login request
-
-    Ожидается JSON с полями:
-    - email: Email пользователя
-    - password: Пароль пользователя
-    Expected JSON with fields:
-    - email: User's email
-    - password: User's password
-
-    :return: Статус авторизации (True/False)
-    Authorization status (True/False)
-    """
-    # Получение данных из тела запроса
-    # Getting data from the request body
     data = request.json
     email = data.get('email')
     password = data.get('password')
 
-    # Проверка на наличие всех полей
-    # Checking if all fields are present
     if not email or not password:
         return jsonify({
             'starus': False,
@@ -209,6 +142,7 @@ def get_places():
         places_list = []
         for place in places:
             name, rating, period, image_blob, description, lat, lng = place
+            image_base64 = base64.b64encode(image_blob).decode('utf-8')
             place_data = {
                 'coordinates': {
                     'lat': lat,
@@ -218,12 +152,40 @@ def get_places():
                 'rating': rating,
                 'period': period,
                 'description': description,
-                'image': None
+                'image': image_base64
                 }
             places_list.append(place_data)
         db.close()
 
         return jsonify({'places': places_list})
+    except Exception as e:
+        return jsonify({'status': False, 'message': str(e)})
+
+@app.route('/people', methods=['GET'])
+@cross_origin()
+def get_people():
+    try:
+        db = sqlite3.connect('fepo.db')
+        sql = db.cursor()
+
+        sql.execute("SELECT category, name, rating, description, image FROM people")
+        people = sql.fetchall()
+
+        people_list = []
+        for person in people:
+            category, name, rating, description, image_blob = person
+            image_base64 = base64.b64encode(image_blob).decode('utf-8')
+            people_data = {
+                'category': category,
+                'name': name,
+                'rating': rating,
+                'description': description,
+                'image': image_base64
+            }
+            people_list.append(people_data)
+        db.close()
+
+        return jsonify({'people': people_list})
     except Exception as e:
         return jsonify({'status': False, 'message': str(e)})
 
