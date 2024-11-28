@@ -16,13 +16,16 @@ def create_bd():
     sql.execute("""
     CREATE TABLE IF NOT EXISTS placess (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
+    category TEXT NOT NULL,
+    dates DATE NOT NULL,
     name TEXT NOT NULL,
     rating INTEGER NOT NULL,
     period TEXT NOT NULL,
     image BLOB,
     description TEXT NOT NULL,
     lat REAL NOT NULL,
-    lng REAL NOT NULL
+    lng REAL NOT NULL,
+    maxPeople INTEGER NOT NULL
     )""")
 
     sql.execute("""
@@ -32,8 +35,15 @@ def create_bd():
     name TEXT NOT NULL,
     rating INTEGER NOT NULL,
     description TEXT NOT NULL,
+    price INTEGER NOT NULL,
     image BLOB
     )""")
+
+    sql.execute("""
+    CREATE TABLE IF NOT EXISTS categories (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    name TEXT NOT NULL)
+    """)
 
     db.commit()
     db.close()

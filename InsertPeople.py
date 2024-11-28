@@ -5,6 +5,7 @@ def insert_people():
     name = input("Введите имя человека: ")
     rating = input("Введите рейтинг (целое число): ")
     description = input("Введите описание данного человека: ")
+    price = int(input("Введите цену услуги за час работы (целое число): "))
     image_path = input("Введите путь к изображению (например, image/example.jpg): ")
 
     try:
@@ -18,9 +19,9 @@ def insert_people():
     sql = db.cursor()
 
     sql.execute("""
-    INSERT INTO people (category, name, rating, description, image)
-    VALUES (?, ?, ?, ?, ?)
-    """, (category, name, rating, description, image_blob))
+    INSERT INTO people (category, name, rating, description, price, image)
+    VALUES (?, ?, ?, ?, ?, ?)
+    """, (category, name, rating, description, price, image_blob))
 
     db.commit()
     db.close()

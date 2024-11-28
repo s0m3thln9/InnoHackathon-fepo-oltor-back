@@ -1,4 +1,5 @@
 import base64
+import json
 
 from flask import Flask, jsonify, request     # Фреймворк для создания веь-приложений и API
 from flask_cors import CORS, cross_origin     # Решает проблему ограничения доступа к серверу из других доменов
@@ -136,23 +137,28 @@ def get_places():
         db = sqlite3.connect('fepo.db')
         sql = db.cursor()
 
-        sql.execute("SELECT name, rating, period, image, description, lat, lng FROM placess")
+        sql.execute("SELECT category, dates, name, rating, period, image, description, lat, lng, maxPeople FROM placess")
         places = sql.fetchall()
 
         places_list = []
         for place in places:
-            name, rating, period, image_blob, description, lat, lng = place
+            category_json, dates_json, name, rating, period, image_blob, description, lat, lng, maxPeople = place
+            category = json.loads(category_json) if category_json else []
+            dates = json.loads(dates_json) if dates_json else []
             image_base64 = base64.b64encode(image_blob).decode('utf-8')
             place_data = {
                 'coordinates': {
                     'lat': lat,
                     'lng': lng
                 },
+                'category': category,
+                'dates': dates,
                 'name': name,
                 'rating': rating,
                 'period': period,
                 'description': description,
-                'image': image_base64
+                'image': image_base64,
+                'maxPeople': maxPeople
                 }
             places_list.append(place_data)
         db.close()
@@ -168,18 +174,19 @@ def get_people():
         db = sqlite3.connect('fepo.db')
         sql = db.cursor()
 
-        sql.execute("SELECT category, name, rating, description, image FROM people")
+        sql.execute("SELECT category, name, rating, description, price, image FROM people")
         people = sql.fetchall()
 
         people_list = []
         for person in people:
-            category, name, rating, description, image_blob = person
+            category, name, rating, description, price, image_blob = person
             image_base64 = base64.b64encode(image_blob).decode('utf-8')
             people_data = {
                 'category': category,
                 'name': name,
                 'rating': rating,
                 'description': description,
+                'price': price,
                 'image': image_base64
             }
             people_list.append(people_data)
