@@ -151,7 +151,7 @@ def get_places():
                     'lat': lat,
                     'lng': lng
                 },
-                'category': category,
+                'categories': category,
                 'dates': dates,
                 'name': name,
                 'rating': rating,
