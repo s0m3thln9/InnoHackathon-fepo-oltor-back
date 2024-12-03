@@ -1,3 +1,4 @@
+import base64
 import sqlite3
 import json
 import bcrypt
@@ -5,7 +6,9 @@ import bcrypt
 DATABASE = 'fepo.db'
 
 def create_connection():
-    return sqlite3.connect('fepo.db')
+    conn = sqlite3.connect(DATABASE)
+    conn.row_factory = sqlite3.Row
+    return conn
 
 def initialize_db():
     with create_connection() as conn:
@@ -71,12 +74,30 @@ def get_all_places():
         cursor.execute("SELECT * FROM placess")
         rows = cursor.fetchall()
         columns = [description[0] for description in cursor.description]
-        places = [dict(zip(columns, row)) for row in rows]
+        
+        places = []
+        for row in rows:
+            place = dict(zip(columns, row))
+            if 'image' in place and place['image']:
+                place['image'] = base64.b64encode(place['image']).decode('utf-8')
+            places.append(place)
+
         return places
+
 
 def get_all_people():
     with create_connection() as conn:
         cursor = conn.cursor()
         cursor.execute("SELECT * FROM people")
         rows = cursor.fetchall()
-        return [dict(row) for row in rows]
+        
+        people = []
+        for row in rows:
+            person = dict(zip([description[0] for description in cursor.description], row))
+            # Преобразуем BLOB в Base64 для столбца с изображением
+            if 'image' in person and person['image']:
+                person['image'] = base64.b64encode(person['image']).decode('utf-8')
+            people.append(person)
+
+        return people
+
