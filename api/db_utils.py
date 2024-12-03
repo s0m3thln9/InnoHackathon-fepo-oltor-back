@@ -5,9 +5,7 @@ import bcrypt
 DATABASE = 'fepo.db'
 
 def create_connection():
-    conn = sqlite3.connect(DATABASE)
-    conn.row_factory = sqlite3.Row
-    return conn
+    return sqlite3.connect('fepo.db')
 
 def initialize_db():
     with create_connection() as conn:
@@ -72,7 +70,9 @@ def get_all_places():
         cursor = conn.cursor()
         cursor.execute("SELECT * FROM placess")
         rows = cursor.fetchall()
-        return [dict(row) for row in rows]
+        columns = [description[0] for description in cursor.description]
+        places = [dict(zip(columns, row)) for row in rows]
+        return places
 
 def get_all_people():
     with create_connection() as conn:
