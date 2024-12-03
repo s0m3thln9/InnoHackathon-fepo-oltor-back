@@ -3,7 +3,7 @@ from flask_cors import CORS
 from api.db_utils import check_user_credentials
 
 app = Flask(__name__)
-CORS(app)
+CORS(app, resources={r"/*": {"origins": "*"}})
 
 @app.route('/api/login', methods=['POST'])
 def login_user():

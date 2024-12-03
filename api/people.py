@@ -3,7 +3,7 @@ from flask_cors import CORS
 from api.db_utils import get_all_people
 
 app = Flask(__name__)
-CORS(app)
+CORS(app, resources={r"/*": {"origins": "*"}})
 
 @app.route('/api/people', methods=['GET'])
 def get_people():

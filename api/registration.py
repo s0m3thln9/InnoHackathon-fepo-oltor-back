@@ -3,8 +3,7 @@ from flask_cors import CORS
 from api.db_utils import save_data_to_db
 
 app = Flask(__name__)
-CORS(app)
-
+CORS(app)CORS(app, resources={r"/*": {"origins": "*"}})
 @app.route('/api/registration', methods=['POST'])
 def registration_user():
     data = request.json
