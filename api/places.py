@@ -5,7 +5,7 @@ from api.db_utils import get_all_places
 app = Flask(__name__)
 CORS(app)
 
-@app.route('/places', methods=['GET'])
+@app.route('/api/places', methods=['GET'])
 def get_places():
     print("Vercel endpoint /api/places called")
     try:
