@@ -5,7 +5,7 @@ from api.db_utils import check_user_credentials
 app = Flask(__name__)
 CORS(app)
 
-@app.route('/login', methods=['POST'])
+@app.route('/api/login', methods=['POST'])
 def login_user():
     data = request.json
     email = data.get('email')

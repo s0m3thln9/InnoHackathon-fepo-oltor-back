@@ -5,7 +5,7 @@ from api.db_utils import save_data_to_db
 app = Flask(__name__)
 CORS(app)
 
-@app.route('/registration', methods=['POST'])
+@app.route('/api/registration', methods=['POST'])
 def registration_user():
     data = request.json
     name = data.get('name')

@@ -5,7 +5,7 @@ from api.db_utils import get_all_people
 app = Flask(__name__)
 CORS(app)
 
-@app.route('/people', methods=['GET'])
+@app.route('/api/people', methods=['GET'])
 def get_people():
     try:
         people = get_all_people()
