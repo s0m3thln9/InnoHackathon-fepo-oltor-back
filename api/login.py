@@ -19,5 +19,13 @@ def login_user():
         return jsonify({'status': True, 'user': user, 'message': 'Login successful'})
     return jsonify({'status': False, 'user': None, 'message': 'Invalid email or password'})
 
+@app.route('/api/login', methods=['OPTIONS'])
+def handle_options():
+    response = jsonify({})
+    response.headers.add('Access-Control-Allow-Origin', 'https://inno-hackathon-fepo-oltor-front.vercel.app')
+    response.headers.add('Access-Control-Allow-Methods', 'POST, OPTIONS')
+    response.headers.add('Access-Control-Allow-Headers', 'Content-Type')
+    return response
+
 if __name__ == "__main__":
     app.run()
