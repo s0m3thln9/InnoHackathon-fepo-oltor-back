@@ -12,3 +12,6 @@ def get_people():
         return jsonify({'people': people})
     except Exception as e:
         return jsonify({'status': False, 'message': str(e)})
+
+if __name__ == "__main__":
+    app.run()

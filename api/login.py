@@ -18,3 +18,6 @@ def login_user():
     if user:
         return jsonify({'status': True, 'user': user, 'message': 'Login successful'})
     return jsonify({'status': False, 'user': None, 'message': 'Invalid email or password'})
+
+if __name__ == "__main__":
+    app.run()

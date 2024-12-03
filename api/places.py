@@ -7,9 +7,12 @@ CORS(app)
 
 @app.route('/places', methods=['GET'])
 def get_places():
-    return jsonify('places')
+    print("Vercel endpoint /api/places called")
     try:
         places = get_all_places()
         return jsonify({'places': places})
     except Exception as e:
         return jsonify({'status': False, 'message': str(e)})
+
+if __name__ == "__main__":
+    app.run()

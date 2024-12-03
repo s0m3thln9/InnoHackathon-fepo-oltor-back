@@ -22,3 +22,6 @@ def registration_user():
         return jsonify({'status': False, 'message': str(e)})
     except Exception as e:
         return jsonify({'status': False, 'message': f'Error during registration: {e}'})
+
+if __name__ == "__main__":
+    app.run()
