@@ -3,7 +3,7 @@ from flask_cors import CORS
 from api.db_utils import check_user_credentials
 
 app = Flask(__name__)
-CORS(app, resources={r"/*": {"origins": "https://inno-hackathon-fepo-oltor-front.vercel.app"}})
+CORS(app, resources={r"/*": {"origins": "https://inno-hackathon-fepo-oltor-front"}})
 
 @app.route('/api/login', methods=['POST'])
 def login_user():
@@ -16,17 +16,8 @@ def login_user():
 
     user = check_user_credentials(email, password)
     if user:
-        response = jsonify({'status': True, 'user': user, 'message': 'Login successful'})
-        response.headers.add('Access-Control-Allow-Origin', 'https://inno-hackathon-fepo-oltor-front.vercel.app')
-        response.headers.add('Access-Control-Allow-Methods', 'POST, OPTIONS')
-        response.headers.add('Access-Control-Allow-Headers', 'Content-Type')
-        return response
-    
-    response = jsonify({'status': False, 'user': None, 'message': 'Invalid email or password'})
-    response.headers.add('Access-Control-Allow-Origin', 'https://inno-hackathon-fepo-oltor-front.vercel.app')
-    response.headers.add('Access-Control-Allow-Methods', 'POST, OPTIONS')
-    response.headers.add('Access-Control-Allow-Headers', 'Content-Type')
-    return response
+        return jsonify({'status': True, 'user': user, 'message': 'Login successful'})
+    return jsonify({'status': False, 'user': None, 'message': 'Invalid email or password'})
 
 @app.route('/api/login', methods=['OPTIONS'])
 def handle_options():
