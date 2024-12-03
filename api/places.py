@@ -7,6 +7,7 @@ CORS(app)
 
 @app.route('/places', methods=['GET'])
 def get_places():
+    return jsonify('places')
     try:
         places = get_all_places()
         return jsonify({'places': places})
