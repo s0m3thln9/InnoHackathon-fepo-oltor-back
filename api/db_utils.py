@@ -71,7 +71,7 @@ def check_user_credentials(email, password):
 def get_all_places():
     with create_connection() as conn:
         cursor = conn.cursor()
-        cursor.execute("SELECT * FROM placess")
+        cursor.execute("SELECT * FROM places")
         rows = cursor.fetchall()
         columns = [description[0] for description in cursor.description]
         

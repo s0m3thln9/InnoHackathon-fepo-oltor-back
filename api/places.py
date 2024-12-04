@@ -7,7 +7,6 @@ CORS(app, resources={r"/*": {"origins": "https://inno-hackathon-fepo-oltor-front
 
 @app.route('/api/places', methods=['GET'])
 def get_places():
-    print("Vercel endpoint /api/places called")
     try:
         places = get_all_places()
         return jsonify({'places': places})
